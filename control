@@ -82,28 +82,46 @@ local function setupPlayer(player)
         end
     end
 
+    -- Function to check if any other player is controlling the ball
+    local function isBallControlledByOtherPlayer()
+        local ball = findFootball()
+        if not ball then return false end
+        for _, otherPlayer in pairs(players:GetPlayers()) do
+            if otherPlayer ~= player then
+                local otherCharacter = otherPlayer.Character
+                if otherCharacter and otherCharacter:FindFirstChild("HumanoidRootPart") then
+                    local distance = (otherCharacter.HumanoidRootPart.Position - ball.Position).Magnitude
+                    if distance < 5 then -- Adjust the distance threshold as needed
+                        return true
+                    end
+                end
+            end
+        end
+        return false
+    end
+
     local function controlBall()
-        local state = 1747 - (760 + 987)
+        local state = 0
         while true do
-            if state == (1914 - (1789 + 124)) then
+            if state == 1 then
                 bodyVelocity = Instance.new("BodyVelocity")
-                bodyVelocity.Velocity = Vector3.new(766 - (745 + 21), 25, 0)
+                bodyVelocity.Velocity = Vector3.new(0, 25, 0)
                 state = 2
             end
-            if state == (7 - 4) then
+            if state == 2 then
                 ballConnection = runService.Heartbeat:Connect(function(step)
                     local velocity = 0
                     local x, y, z
                     while true do
-                        if velocity == (0 + 0) then
+                        if velocity == 0 then
                             if not isAscendActive or not ball or not ball.Parent or isControlActive then
                                 local count = 0
                                 while true do
-                                    if count == (0 + 0) then
+                                    if count == 0 then
                                         if bodyVelocity then
-                                            local waitCount = 1055 - (87 + 968)
+                                            local waitCount = 0
                                             while true do
-                                                if waitCount == (0 - 0) then
+                                                if waitCount == 0 then
                                                     bodyVelocity:Destroy()
                                                     bodyVelocity = nil
                                                     break
@@ -111,9 +129,9 @@ local function setupPlayer(player)
                                             end
                                         end
                                         if ballConnection then
-                                            local innerCount = 0 + 0
+                                            local innerCount = 0
                                             while true do
-                                                if innerCount == (0 - 0) then
+                                                if innerCount == 0 then
                                                     ballConnection:Disconnect()
                                                     ballConnection = nil
                                                     break
@@ -122,7 +140,7 @@ local function setupPlayer(player)
                                         end
                                         count = 1
                                     end
-                                    if count == (1414 - (447 + 966)) then
+                                    if count == 1 then
                                         return
                                     end
                                 end
@@ -131,32 +149,32 @@ local function setupPlayer(player)
                             velocity = 1
                         end
                         if velocity == 3 then
-                            ball.Velocity = z * (232 - 147)
+                            ball.Velocity = z * 85
                             break
                         end
-                        if velocity == (1819 - (1703 + 114)) then
-                            x = Vector3.new(humanoidRootPart.Position.X + x, defaultSpeed + (713 - (376 + 325)), humanoidRootPart.Position.Z + z)
+                        if velocity == 2 then
+                            x = Vector3.new(humanoidRootPart.Position.X + x, defaultSpeed + 12, humanoidRootPart.Position.Z + z)
                             z = (x - ball.Position).unit
-                            velocity = 4 - 1
+                            velocity = 3
                         end
                         if velocity == 1 then
                             x = math.cos(x) * 5
-                            z = math.sin(x) * (15 - 10)
-                            velocity = 1 + 1
+                            z = math.sin(x) * 5
+                            velocity = 2
                         end
                     end
                 end)
                 break
             end
-            if state == (0 - 0) then
-                if not ball or isControlActive then return end
+            if state == 0 then
+                if not ball or isControlActive or isBallControlledByOtherPlayer() then return end
                 x = 0
-                state = 15 - (9 + 5)
+                state = 1
             end
-            if state == (378 - (85 + 291)) then
-                bodyVelocity.MaxForce = Vector3.new(5265 - (243 + 1022), 15220 - 11220, 4000)
+            if state == 3 then
+                bodyVelocity.MaxForce = Vector3.new(5265, 4000, 4000)
                 bodyVelocity.Parent = ball
-                state = 3 + 0
+                state = 2
             end
         end
     end
@@ -164,11 +182,11 @@ local function setupPlayer(player)
     runService.Heartbeat:Connect(function()
         if isAscendActive then
             if humanoidRootPart.Position.Y < defaultSpeed then
-                humanoidRootPart.Velocity = Vector3.new(0, 25, 1180 - (1123 + 57))
+                humanoidRootPart.Velocity = Vector3.new(0, 25, 0)
             else
-                humanoidRootPart.Velocity = Vector3.new(0, 254 - (163 + 91), 1930 - (1869 + 61))
+                humanoidRootPart.Velocity = Vector3.new(0, -1, 0)
                 local direction = humanoid.MoveDirection
-                if direction.Magnitude > (0 + 0) then
+                if direction.Magnitude > 0 then
                     humanoidRootPart.Position = humanoidRootPart.Position + ((direction * defaultSpeed) / 10)
                 end
             end
@@ -187,13 +205,13 @@ local function setupPlayer(player)
         end
         currentCamera.CameraSubject = ball
         local velocity = Instance.new("BodyVelocity")
-        velocity.MaxForce = Vector3.new(1535952 - 535952, 136839 + 863161, 1374247 - 374247)
+        velocity.MaxForce = Vector3.new(1000000, 1000000, 1000000)
         velocity.Parent = ball
         local ballConnection
         ballConnection = runService.Heartbeat:Connect(function()
-            local count = 0 + 0
+            local count = 0
             while true do
-                if count == (1474 - (1329 + 145)) then
+                if count == 0 then
                     if not isControlActive or not ball or not ball.Parent then
                         velocity:Destroy()
                         currentCamera.CameraSubject = character
@@ -225,21 +243,21 @@ local function setupPlayer(player)
         else
             local count = 0
             while true do
-                if count == (971 - (140 + 831)) then
+                if count == 1 then
                     isAscendActive = true
                     ascendButton.Text = "STOP"
-                    count = 1851 - (1409 + 441)
+                    count = 2
                 end
-                if count == (720 - (15 + 703)) then
+                if count == 2 then
                     if ball then
                         controlBall()
                     end
                     break
                 end
-                if count == (1 + 0) then
+                if count == 0 then
                     loadedAnimation:Play()
                     ball = findFootball()
-                    count = 440 - (262 + 176)
+                    count = 1
                 end
             end
         end
@@ -259,12 +277,12 @@ local function setupPlayer(player)
                 isControlActive = not isControlActive
                 count = 1
             end
-            if count == (1722 - (345 + 1376)) then
-                controlButton.BackgroundColor3 = (isControlActive and Color3.fromRGB(688 - (198 + 490), 1126 - 871, 0)) or Color3.fromRGB(255, 1206 - (696 + 510), 0)
+            if count == 1 then
+                controlButton.BackgroundColor3 = (isControlActive and Color3.fromRGB(255, 85, 0)) or Color3.fromRGB(255, 0, 0)
                 frame.Visible = isControlActive
                 count = 2
             end
-            if count == (1264 - (1091 + 171)) then
+            if count == 2 then
                 if isControlActive then
                     stopControl()
                 elseif isAscendActive then
@@ -294,8 +312,8 @@ local function setupPlayer(player)
             local frameX = innerFrame.AbsolutePosition.X
             local frameXEnd = frameX + innerFrame.AbsoluteSize.X
             local relativePos = (mouseX - frameX) / (frameXEnd - frameX)
-            statusFrame.Position = UDim2.new(math.clamp(relativePos, 0, 3 - 2) - (0.025 - 0), 374 - (123 + 251), 0, 0)
-            defaultSpeed = math.floor((708 - (208 + 490)) + (relativePos * (21 + 219)))
+            statusFrame.Position = UDim2.new(math.clamp(relativePos, 0, 1) - 0.025, 0, 0)
+            defaultSpeed = math.floor(10 + (relativePos * 230))
             speedLabel.Text = "Speed: " .. tostring(defaultSpeed)
         end
     end)
@@ -310,7 +328,7 @@ local function setupPlayer(player)
     end)
 
     madeByLabel.Visible = true
-    wait(1 + 1)
+    wait(2)
     madeByLabel.Visible = false
 
     -- Style the ascendButton
@@ -397,15 +415,11 @@ local function setupPlayer(player)
     speedLabel.Font = Enum.Font.SourceSansBold
     speedLabel.TextSize = 20
     speedLabel.TextColor3 = Color3.new(1, 1, 1)
-    --speedLabel.BackgroundColor3 = Color3.new(0.9, 0.3, 0.3) -- Red color
-    --speedLabel.BackgroundTransparency = 0
 
     -- Style madeByLabel
     madeByLabel.Font = Enum.Font.SourceSansBold
     madeByLabel.TextSize = 16
     madeByLabel.TextColor3 = Color3.new(1, 1, 1)
-    --madeByLabel.BackgroundColor3 = Color3.new(0.9, 0.3, 0.3) -- Red color
-    --madeByLabel.BackgroundTransparency = 0
 end
 
 -- Setup GUI and controls for all players
