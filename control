@@ -1,7 +1,6 @@
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
 local userInputService = game:GetService("UserInputService")
-local localPlayer = players.LocalPlayer
 local currentCamera = workspace.CurrentCamera
 
 local function setupPlayer(player)
@@ -81,8 +80,6 @@ local function setupPlayer(player)
             warn("Football Part not found in workspace.")
             return nil -- Football Part not found
         end
-        warn("Football was not found.")
-        return nil
     end
 
     local function controlBall()
@@ -411,14 +408,11 @@ local function setupPlayer(player)
     --madeByLabel.BackgroundTransparency = 0
 end
 
+-- Setup GUI and controls for all players
 for _, player in pairs(players:GetPlayers()) do
-    if player ~= localPlayer then
-        setupPlayer(player)
-    end
+    setupPlayer(player)
 end
 
 players.PlayerAdded:Connect(function(player)
-    if player ~= localPlayer then
-        setupPlayer(player)
-    end
-end
+    setupPlayer(player)
+end)
